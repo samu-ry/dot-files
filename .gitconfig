@@ -1,0 +1,8 @@
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+[color "status"]
+  changed = yellow
+  added = green
+  untracked = red
