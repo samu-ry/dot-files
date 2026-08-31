@@ -6,13 +6,13 @@ alias showFiles='defaults write com.apple.finder AppleShowAllFiles YES; killall 
 alias hideFiles='defaults write com.apple.finder AppleShowAllFiles NO; killall Finder /System/Library/CoreServices/Finder.app'
 
 #   -----------------------------
-#   Only show host name in terminal
+#   Terminal colors and prompt
 #   -----------------------------
 
-PS1="@%m~ %& # "
+export CLICOLOR=1
+export LSCOLORS='GxFxCxDxBxegedabagaced'
 
-#   -----------------------------
-#   Change host name color
-#   -----------------------------
+autoload -Uz colors && colors
 
-PROMPT='%F{cyan}%m%f:~$'
+PROMPT='%F{cyan}%m%f:%F{green}%~%f %# '
+RPROMPT='%F{yellow}%*%f'
