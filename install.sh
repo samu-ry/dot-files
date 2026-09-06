@@ -6,7 +6,7 @@ source_file="$repo_dir/.zshrc"
 target_file="$HOME/.zshrc"
 
 usage() {
-  printf 'Usage: %s [install|check|remove]\n' "$(basename "$0")"
+  printf 'Usage: %s [install|check|remove|restore|git]\n' "$(basename "$0")"
 }
 
 check_installation() {
@@ -55,6 +55,28 @@ remove_configuration() {
   printf 'No repository symlink found at %s; nothing removed\n' "$target_file"
 }
 
+restore_configuration() {
+  if [[ ! -L "$target_file" || "$(readlink "$target_file")" != "$source_file" ]]; then
+    printf 'No repository symlink found at %s; nothing restored\n' "$target_file"
+    return 1
+  fi
+
+  backup_file="$(find "$HOME" -maxdepth 1 -type f -name '.zshrc.backup.*' -print | sort | tail -n 1)"
+  if [[ -z "$backup_file" ]]; then
+    printf 'No .zshrc backup found in %s\n' "$HOME" >&2
+    return 1
+  fi
+
+  rm "$target_file"
+  mv "$backup_file" "$target_file"
+  printf 'Restored %s from %s\n' "$target_file" "$backup_file"
+}
+
+configure_git() {
+  git config --global include.path "$repo_dir/.gitconfig"
+  printf 'Configured Git to include %s\n' "$repo_dir/.gitconfig"
+}
+
 command="${1:-install}"
 case "$command" in
   install)
@@ -65,6 +87,12 @@ case "$command" in
     ;;
   remove)
     remove_configuration
+    ;;
+  restore)
+    restore_configuration
+    ;;
+  git)
+    configure_git
     ;;
   -h|--help)
     usage

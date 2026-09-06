@@ -13,6 +13,11 @@ export CLICOLOR=1
 export LSCOLORS='GxFxCxDxBxegedabagaced'
 
 autoload -Uz colors && colors
+autoload -Uz vcs_info
+setopt prompt_subst
 
-PROMPT='%F{cyan}%m%f:%F{green}%~%f %# '
+precmd_functions+=(vcs_info)
+zstyle ':vcs_info:git:*' formats ' (%b)'
+
+PROMPT='%F{cyan}%m%f:%F{green}%~%f%F{magenta}${vcs_info_msg_0_}%f %# '
 RPROMPT='%F{yellow}%*%f'
