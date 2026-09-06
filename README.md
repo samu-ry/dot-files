@@ -10,6 +10,7 @@ This repository stores the shell and Git configuration I use locally. The reposi
 - `.bash_profile` - bash compatibility settings and aliases
 - `.gitconfig` - Git color settings for diff, status, and branch output
 - `install.sh` - safely installs the repository's `.zshrc` in the home directory
+- `validate.sh` - checks shell syntax, formatting, and installer behavior
 
 ## Terminal setup
 
@@ -26,6 +27,15 @@ source ~/.zshrc
 
 The installer creates `~/.zshrc` as a symlink to this repository's `.zshrc`. If a real `~/.zshrc` already exists, it moves it to a timestamped backup before creating the link. Running the installer again is safe when the link is already correct.
 
+The installer also supports:
+
+```bash
+./install.sh check
+./install.sh remove
+```
+
+`check` reports whether `~/.zshrc` points to this repository. `remove` removes only that matching symlink; it does not remove an unrelated `.zshrc`.
+
 After changing `.zshrc` in this repository, update the current terminal with:
 
 ```bash
@@ -41,6 +51,16 @@ git pull
 
 If you still use bash explicitly, `.bash_profile` remains available for bash sessions. It is not loaded by zsh.
 
+## Validate changes
+
+Run the repository checks after editing shell configuration or the installer:
+
+```bash
+./validate.sh
+```
+
+This checks Bash and zsh syntax, Git whitespace errors, and installation behavior in a temporary home directory. It does not modify your real `~/.zshrc`.
+
 ## Git configuration
 
 The Git color file is optional. To use it globally, run this from the repository directory:
@@ -55,6 +75,7 @@ This keeps the Git UI consistent with the terminal color scheme and makes status
 
 - The repository must exist at a stable path because `~/.zshrc` will point to it.
 - Run `./install.sh` once on each Mac or user account where the configuration should be active.
+- Keep the repository's `install.sh` and `validate.sh` executable; Git preserves those permissions.
 - Use a dark macOS Terminal profile with readable text so the cyan, green, and yellow prompt colors remain visible.
 - No Terminal.app setting or system-wide permission change is required.
 
