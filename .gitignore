@@ -2,3 +2,9 @@
 *.swp
 *.swo
 *.backup.*
+
+# Local credentials and machine-specific configuration
+.env
+.env.*
+.npmrc
+.ssh/
