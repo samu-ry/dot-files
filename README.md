@@ -10,6 +10,7 @@ This repository stores the shell and Git configuration I use locally. The reposi
 - `.gitconfig` - Git color settings for diff, status, and branch output
 - `install.sh` - safely installs the repository's `.zshrc` in the home directory
 - `install-nvm.sh` - assesses and optionally installs a reviewed NVM release
+- `check-environment.sh` - audits local development tools, npm, and SSH readiness
 - `validate.sh` - checks shell syntax, formatting, and installer behavior
 - `color-test.sh` - displays the terminal colors used by the configuration
 - `LICENSE` - MIT License
@@ -75,6 +76,18 @@ source ~/.zshrc
 The installer uses a pinned, versioned upstream release and `PROFILE=/dev/null`, so it does not edit `~/.zshrc`; this repository remains the source of truth for loading NVM. It installs NVM only, does not install Node.js, does not use `sudo`, and is safe to run again. The pinned version should be updated deliberately after reviewing the official NVM release notes and support statement. Set `NVM_VERSION` explicitly when testing a reviewed release.
 
 This is an evidence-based shell check, not an infallible definition of best practice. It should surface the facts and alternatives for review rather than make a destructive or irreversible choice automatically.
+
+## Check the development environment
+
+For a broader new-machine audit, run:
+
+```bash
+./check-environment.sh
+```
+
+This read-only check reports Git, Homebrew, NVM, Node.js, npm, npmrc compatibility, SSH key presence, SSH directory permissions, and whether an SSH agent has loaded keys. It is useful for finding setup drift without committing machine-specific configuration to the repository.
+
+The audit does not install tools, create SSH keys, copy private keys, expose credentials, or contact SSH hosts. Keep private keys, `known_hosts`, npm tokens, and other credentials outside this repository. A user npmrc containing `prefix` or `globalconfig` settings should be reviewed before using NVM.
 
 ## Test terminal colors
 
