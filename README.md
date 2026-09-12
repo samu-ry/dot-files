@@ -9,6 +9,7 @@ This repository stores the shell and Git configuration I use locally. The reposi
 - `.zshrc` - primary zsh configuration for interactive shells
 - `.gitconfig` - Git color settings for diff, status, and branch output
 - `install.sh` - safely installs the repository's `.zshrc` in the home directory
+- `install-nvm.sh` - assesses and optionally installs a reviewed NVM release
 - `validate.sh` - checks shell syntax, formatting, and installer behavior
 - `color-test.sh` - displays the terminal colors used by the configuration
 - `LICENSE` - MIT License
@@ -53,6 +54,27 @@ git pull
 ```
 
 This repository no longer includes a `.bash_profile`; macOS uses zsh by default. Bash-specific configuration should be maintained separately if you need it.
+
+## Assess and install NVM
+
+For a new Mac, first run the read-only assessment:
+
+```bash
+./install-nvm.sh
+```
+
+The assessment checks the Mac, shell, architecture, existing Node.js tooling, competing runtime managers, this repository's NVM integration, and current upstream NVM signals. It reports a recommendation rather than assuming that NVM remains the right choice after a long gap between machines. Network failure is reported as an incomplete assessment; it does not silently claim that upstream is current.
+
+Install only after reviewing that output:
+
+```bash
+./install-nvm.sh install
+source ~/.zshrc
+```
+
+The installer uses a pinned, versioned upstream release and `PROFILE=/dev/null`, so it does not edit `~/.zshrc`; this repository remains the source of truth for loading NVM. It installs NVM only, does not install Node.js, does not use `sudo`, and is safe to run again. The pinned version should be updated deliberately after reviewing the official NVM release notes and support statement. Set `NVM_VERSION` explicitly when testing a reviewed release.
+
+This is an evidence-based shell check, not an infallible definition of best practice. It should surface the facts and alternatives for review rather than make a destructive or irreversible choice automatically.
 
 ## Test terminal colors
 
