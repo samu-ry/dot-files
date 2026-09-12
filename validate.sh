@@ -29,6 +29,7 @@ run_check() {
 }
 
 run_check 'Bash syntax' bash -n install.sh
+run_check 'NVM Bash syntax' bash -n install-nvm.sh
 run_check 'Zsh syntax' zsh -n .zshrc
 run_check 'Git whitespace' git diff --check
 
@@ -43,9 +44,17 @@ check_for_validation() {
 	HOME="$tmp_home" ./install.sh check >/dev/null
 }
 
+check_nvm_for_validation() {
+	HOME="$tmp_home" NVM_DIR="$tmp_home/.nvm" NVM_SKIP_NETWORK=1 ./install-nvm.sh check >"$tmp_home/nvm-check.out"
+	grep -q 'Upstream status.*local checks only' "$tmp_home/nvm-check.out"
+	grep -q 'Review upstream status' "$tmp_home/nvm-check.out"
+}
+
 run_check 'Install behavior' install_for_validation
 run_check 'Symlink created' test -L "$tmp_home/.zshrc"
 run_check 'Symlink target' test "$(readlink "$tmp_home/.zshrc")" = "$script_dir/.zshrc"
 run_check 'Check behavior' check_for_validation
+run_check 'NVM check behavior' check_nvm_for_validation
+run_check 'NVM check is read-only' test ! -e "$tmp_home/.nvm"
 
 printf '\n%sValidation passed%s\n' "$green" "$reset"
